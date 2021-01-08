@@ -1,3 +1,36 @@
+class Body():
+    def __init__(self,**kwargs):
+        self.Heart = Heart(
+            resting_bpm=kwargs.pop(
+                'resting_bpm',
+                80
+                )
+            )
+        self.Stomach = Stomach(contents=kwargs.pop('contents',[]))
+        self.energy = kwargs.pop('energy',0)
+
+    def meal(self,*args):
+        for item in args:
+            self.Stomach.contents.append(item)
+
+    def exercise(self,*args):
+        self.energy += self.Stomach.digest()
+        self.energy += -1
+        self.Heart.bpm += 10
+        if self.energy <0:
+            print('Hungry!')
+        if self.Heart.bpm > 140:
+            print('Overworked!')
+
+
+    def __call__(self):
+        print('Stop poking me!')
+
+    def __repr__(self):
+        return repr(self.__dict__)
+    def __str__(self):
+        return str('\n'.join([str(self.Heart),str(self.Stomach)]))
+
 class Organ():
     def __init__(self,name,condition='fair'):
         self.condition = condition
@@ -32,26 +65,3 @@ class Heart(Organ):
         self.bpm = self.resting_bpm
     def __str__(self):
         return f'The {self.name} is in {self.condition} condition and the resting beats per minute is {self.resting_bpm}'
-class Body():
-    def __init__(self,**kwargs):
-        self.Heart = Heart(
-            resting_bpm=kwargs.pop(
-                'resting_bpm',
-                80
-                )
-            )
-        self.Stomach = Stomach(contents=kwargs.pop('contents',[]))
-        self.energy = kwargs.pop('energy',0)
-    def __str__(self):
-        return 'This is a body'
-    def meal(self,*args):
-        for item in args:
-            self.Stomach.contents.append(item)
-    def exercise(self,*args):
-        self.energy += self.Stomach.digest()
-        self.energy += -1
-        self.Heart.bpm += 10
-        if self.energy <0:
-            print('Hungry!')
-        if self.Heart.bpm > 140:
-            print('Overworked!')
